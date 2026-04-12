@@ -1,6 +1,7 @@
-﻿#:sdk Aspire.AppHost.Sdk@13.2.1
+#:sdk Aspire.AppHost.Sdk@13.2.1
 #:package Aspire.Hosting.GitHub.Models@13.2.1
 #:package Aspire.Hosting.JavaScript@13.2.1
+#:package Aspire.Hosting.Keycloak@13.2.2-preview.1.26207.2
 #:package Aspire.Hosting.Python@13.2.1
 #:package Aspire.Hosting.Redis@13.2.1
 #:package Aspire.Hosting.Yarp@13.2.1
@@ -14,10 +15,17 @@ var builder = DistributedApplication.CreateBuilder(args);
 var apiKey = builder
     .AddParameter("github-api-key", secret: true);
 
+var username = builder.AddParameter("username");
+var password = builder.AddParameter("password", secret: true);
+
 // INFRASTRUCTURE
 var ai = builder
-    .AddGitHubModel("ai",  "openai/gpt-4o-mini")
+    .AddGitHubModel("ai", "openai/gpt-4o-mini")
     .WithApiKey(apiKey);
+
+var keycloak = builder.AddKeycloak("keycloak", 8080, username, password)
+    .WithDataVolume()
+    .WithOtlpExporter();
 
 var cache = builder
     .AddRedis("cache");
@@ -26,6 +34,8 @@ var cache = builder
 var weather = builder
     .AddUvicornApp("weather", "./services/weather", "main:app")
     .WithUv()
+    .WithReference(keycloak)
+    .WaitFor(keycloak)
     .WithReference(cache)
     .WaitFor(cache)
     .WithHttpHealthCheck("/health")
@@ -36,12 +46,16 @@ var weatherAiOutfit = builder
     .WithUv()
     .WithReference(ai)
     .WaitFor(ai)
+    .WithReference(keycloak)
+    .WaitFor(keycloak)
     .WithHttpHealthCheck("/health")
     .WithHttpsEndpoint();
 
 // FRONTEND
 var frontend = builder
     .AddViteApp("frontend", "./frontend")
+    .WithReference(keycloak)
+    .WaitFor(keycloak)
     .WithExternalHttpEndpoints();
 
 // GATEWAY

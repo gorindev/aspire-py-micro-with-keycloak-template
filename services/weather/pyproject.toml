@@ -9,4 +9,8 @@ dependencies = [
     "opentelemetry-exporter-otlp-proto-grpc>=1.38.0",
     "opentelemetry-instrumentation-fastapi>=0.59b0",
     "redis>=5.2.1",
+    "shared-auth",
 ]
+
+[tool.uv.sources]
+shared-auth = { path = "../shared-py" }

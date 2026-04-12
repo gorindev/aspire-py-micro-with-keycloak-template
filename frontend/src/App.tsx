@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react';
 import aspireLogo from '/Aspire.png';
 import './App.css';
+import keycloak from './keycloak';
+
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  try {
+    await keycloak.updateToken(30);
+  } catch (error) {
+    console.warn('Failed to refresh token, or token expired:', error);
+    keycloak.login();
+  }
+  
+  const headers = new Headers(options.headers || {});
+  if (keycloak.token) {
+    headers.set('Authorization', `Bearer ${keycloak.token}`);
+  }
+  
+  return fetch(url, { ...options, headers });
+};
 
 interface WeatherForecast {
   date: string;
@@ -29,7 +46,7 @@ function App() {
     const weatherString = `${todayWeather.summary}, ${todayWeather.temperatureC}°C (${todayWeather.temperatureF}°F)`;
 
     try {
-      const response = await fetch('/weather-ai-outfit/api/suggest-outfit', {
+      const response = await fetchWithAuth('/weather-ai-outfit/api/suggest-outfit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +74,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await fetch('/weather/api/weatherforecast');
+      const response = await fetchWithAuth('/weather/api/weatherforecast');
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

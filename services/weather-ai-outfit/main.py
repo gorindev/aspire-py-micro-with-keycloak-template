@@ -8,6 +8,7 @@ import fastapi.responses
 import fastapi.staticfiles
 import opentelemetry.instrumentation.fastapi as otel_fastapi
 import telemetry
+import shared_auth
 
 
 @contextlib.asynccontextmanager
@@ -55,7 +56,7 @@ else:
     logger.warning("ConnectionStrings__ai environment variable is missing!")
 
 
-@app.post("/api/suggest-outfit")
+@app.post("/api/suggest-outfit", dependencies=[fastapi.Depends(shared_auth.verify_token)])
 async def suggest_outfit(request: fastapi.Request):
     """Suggest outfit endpoint."""
     weather_data = "Unknown weather"

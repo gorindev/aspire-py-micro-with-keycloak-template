@@ -11,6 +11,7 @@ import fastapi.responses
 import fastapi.staticfiles
 import opentelemetry.instrumentation.fastapi as otel_fastapi
 import telemetry
+import shared_auth
 
 
 @contextlib.asynccontextmanager
@@ -64,7 +65,7 @@ if not os.path.exists("static"):
         """Root endpoint."""
         return "API service is running. Navigate to <a href='/api/weatherforecast'>/weather/api/weatherforecast</a> to see sample data."
 
-@app.get("/api/weatherforecast")
+@app.get("/api/weatherforecast", dependencies=[fastapi.Depends(shared_auth.verify_token)])
 async def weather_forecast():
     """Weather forecast endpoint."""
     cache_key = "weather_forecast"
