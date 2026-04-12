@@ -12,9 +12,7 @@ using Aspire.Hosting.Yarp.Transforms;
 var builder = DistributedApplication.CreateBuilder(args);
 
 // PARAMETERS
-var apiKey = builder
-    .AddParameter("github-api-key", secret: true);
-
+var apiKey = builder.AddParameter("github-api-key", secret: true);
 var username = builder.AddParameter("username");
 var password = builder.AddParameter("password", secret: true);
 

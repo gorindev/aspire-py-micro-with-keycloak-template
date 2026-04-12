@@ -5,12 +5,9 @@ description = "Weather service"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.119.0",
-    "opentelemetry-distro>=0.59b0",
-    "opentelemetry-exporter-otlp-proto-grpc>=1.38.0",
-    "opentelemetry-instrumentation-fastapi>=0.59b0",
     "redis>=5.2.1",
-    "shared-auth",
+    "shared-py",
 ]
 
 [tool.uv.sources]
-shared-auth = { path = "../shared-py" }
+shared-py = { path = "../shared-py" }

@@ -7,13 +7,13 @@ import fastapi
 import fastapi.responses
 import fastapi.staticfiles
 import opentelemetry.instrumentation.fastapi as otel_fastapi
-import telemetry
+import shared_telemetry
 import shared_auth
 
 
 @contextlib.asynccontextmanager
 async def lifespan(app):
-    telemetry.configure_opentelemetry()
+    shared_telemetry.configure_opentelemetry()
     yield
 
 
