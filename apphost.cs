@@ -1,10 +1,10 @@
-#:sdk Aspire.AppHost.Sdk@13.2.1
-#:package Aspire.Hosting.GitHub.Models@13.2.1
-#:package Aspire.Hosting.JavaScript@13.2.1
+﻿#:sdk Aspire.AppHost.Sdk@13.2.2
+#:package Aspire.Hosting.GitHub.Models@13.2.2
+#:package Aspire.Hosting.JavaScript@13.2.2
 #:package Aspire.Hosting.Keycloak@13.2.2-preview.1.26207.2
-#:package Aspire.Hosting.Python@13.2.1
-#:package Aspire.Hosting.Redis@13.2.1
-#:package Aspire.Hosting.Yarp@13.2.1
+#:package Aspire.Hosting.Python@13.2.2
+#:package Aspire.Hosting.Redis@13.2.2
+#:package Aspire.Hosting.Yarp@13.2.2
 
 using Aspire.Hosting;
 using Aspire.Hosting.Yarp.Transforms;
